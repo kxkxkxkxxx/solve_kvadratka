@@ -1,31 +1,31 @@
 #include <stdio.h>
 #include <TXLib.h>
 #include <math.h>
+//#define NDEBUG
 #include <assert.h>
 #include <ctype.h>
 #include <stdlib.h>
 //#include "solutions.h"
 //#include "input_output.h"
 
-enum iteration_variable {
+enum {
+
+    //NO_ROOTS = -10000,
+    //INFINITY = 10000,//n_roots
+
     CONTINUE = -1,
-    STOP = 0
+    STOP = 0,    //would_user_continue
+
+    //LESS = -3,
+    //EQUAL = -2,
+    //GREATER = 1,  //discriminant_and_zero
+
+    //YES = 7,
+    //NO = 8   //is_variables_equal
+
 };
 
-/*enum n_roots {
-    INFINITY = 10000
-};
 
-enum discriminant_and_zero {
-    LESS = -1,
-    EQUAL = 0,
-    GREATER = 1
-};
-
-enum is_variables_equal {
-    YES = 1,
-    NO = 0
-};*/
 
 int compare_b_with_c(double b, double c, int* compare_b_with_c_result);
 
@@ -38,7 +38,7 @@ void output_solver_equations(double x1, double x2, int nRoots);
 int compare_variables(double var_1, double var_2);
 
 
-double input(double* a, double* b, double* c, int* n_scanf, int* iterationVariable);
+int input(double* a, double* b, double* c, int* n_scanf/*, int* iterationVariable*/);
 
 int clear_buffer();
 int would_user_continue(int* iteration_variable);
@@ -55,12 +55,11 @@ int main()
     printf("квадратное уравнение в общем виде: a*x^2+b*x+c=0\n");
 
     double a = NAN, b = NAN, c = NAN, x1 = NAN, x2 = NAN;
-    int iterationVariable = 0, nRoots = 0, n_scanf = 0;
-    int iteration_variable = 0;
+    int iterationVariable = 0, nRoots = 0, n_scanf = 0, iteration_variable = 0;
 
     for(; iterationVariable < 1; ++iterationVariable)
     {
-        input(&a, &b, &c, &n_scanf, &iterationVariable);
+        input(&a, &b, &c, &n_scanf/*, &iterationVariable*/);
 
         solver_equations(a, b, c, n_scanf, &x1, &x2, &nRoots);
         output_solver_equations(x1, x2, nRoots);
@@ -102,21 +101,19 @@ int clear_buffer()
 }
 
 
-double input(double* a, double* b, double* c, int* n_scanf, int* iterationVariable)
+int input(double* a, double* b, double* c, int* n_scanf/*, int* iterationVariable*/)
 {
     printf("введите коэффициенты a,b,c:\n");
 
     *n_scanf = scanf("%lf %lf %lf", &*a, &*b, &*c);
-    int iteration_variable = 0;
+   // int iteration_variable = 0;
+
     if(*n_scanf != 3)
     {
-        clear_buffer();
         printf("данные введены некорректно\n");
-
-        would_user_continue(&iteration_variable);
-        *iterationVariable = iteration_variable;
         clear_buffer();
     }
+
     return *n_scanf;
 }
 
@@ -124,28 +121,32 @@ double input(double* a, double* b, double* c, int* n_scanf, int* iterationVariab
 
 int solver_equations(double a,  double b, double c, int n_scanf, double* x1, double* x2, int* nRoots)
 {
-    assert(n_scanf == 3);
-
     int n_roots = 0;
     double x_1 = NAN, x_2 = NAN;
 
-    if(compare_variables(0.0, a) == 1) //yes
+    if(n_scanf == 3)
     {
-        square_equation_solution(a, b, c, &x_1, &x_2, &n_roots);
+        if(compare_variables(0.0, a) == 0) //yes
+        {
+            square_equation_solution(a, b, c, &x_1, &x_2, &n_roots);
 
-        *x1 = x_1;
-        *x2 = x_2;
+            *x1 = x_1;
+            *x2 = x_2;
 
-        *nRoots = n_roots;
+            *nRoots = n_roots;
+        }
+
+        else
+        {
+            linear_equation_solution( b, c, &x_1, &n_roots);
+
+            *nRoots = n_roots;
+            *x1 = x_1;
+        }
     }
 
     else
-    {
-        linear_equation_solution( b, c, &x_1, &n_roots);
-
-        *nRoots = n_roots;
-        *x1 = x_1;
-    }
+        *nRoots = -10000;
 
     return *nRoots;
 }
@@ -157,14 +158,19 @@ int compare_variables(double var_1, double var_2)
     int is_variables_equal = 0;
     const double compare_const = 0.000001;
 
-    assert(fabs(var_1 - var_2) < compare_const);
+    //assert(fabs(var_1 - var_2) < compare_const);
 
     if(fabs(var_1 - var_2) < compare_const)
+    {
+        assert(is_variables_equal == 1);
         is_variables_equal = 1; //yes
+    }
 
     else
+    {
+        assert(is_variables_equal == 0);
         is_variables_equal = 0; //no
-
+    }
     return is_variables_equal;
 }
 
@@ -184,8 +190,11 @@ void output_solver_equations(double x1, double x2, int nRoots)
         case 2 : printf("уравнение имеет 2 корня : x_1 = %lf, x_2 = %lf\n", x1, x2);
                  break;
 
-        case 10000 :
+        case /*INFINITY*/10000 :
                  printf("уравнение имеет бесконечное колличество решений \n");
+                 break;
+
+        case -10000 :
                  break;
 
         case 999: printf("так быть не должно!!!\n");
@@ -244,15 +253,18 @@ int square_equation_solution(double a, double b, double c,
                *x_1 = - b / (2 * a);
                break;
 
-     case 1 :  assert(discriminant_and_zero == 1);
-               *n_roots = 2;
+     case 1 :
+            assert(discriminant_and_zero == 1);
+            *n_roots = 2;
 
-               square_root_discriminant = sqrt(discriminant);
-               *x_1 = - b + square_root_discriminant;
-               *x_2 = - b - square_root_discriminant;
-               break;
+            square_root_discriminant = sqrt(discriminant);
+            *x_1 = - b + square_root_discriminant;
+            *x_2 = - b - square_root_discriminant;
+            break;
 
-               default : *n_roots = 999;
+     default :
+            *n_roots = 999;
+
     }
     return *n_roots;
 }
@@ -268,20 +280,23 @@ int linear_equation_solution(double b, double c,
 
     switch(compare_b_with_c_result)
     {
-        case - 1 : assert(compare_b_with_c_result == -1)
-                   *x_1 = NAN;
-                   *n_roots = 0;
-                   break;
+        case -1 :
+            assert(compare_b_with_c_result == -1);
+            (*x_1) = NAN;
+            *n_roots = 0;
+            break;
 
-        case 0 : assert(compare_b_with_c_result == 0)
-                 *x_1 = 12345;
-                 *n_roots = 10000; //infinity
-                 break;
+        case 0 :
+            assert(compare_b_with_c_result == 0);
+            (*x_1) = 12345.f;
+            *n_roots = 10000/*INFINTY*/; //infinity
+            break;
 
-        case 1 : assert(compare_b_with_c_result == 1)
-                 *x_1 = - c / b;
-                 *n_roots = 1;
-                 break;
+        case 1 :
+            assert(compare_b_with_c_result == 1);
+            (*x_1) = - c / b;
+            *n_roots = 1;
+            break;
 
         default : *n_roots = 999;
     }
@@ -302,5 +317,5 @@ int compare_b_with_c(double b, double c, int* compare_b_with_c_result)
     else
         *compare_b_with_c_result = 1;   //1 корень
 
-     return *compare_b_with_c_result;
+    return *compare_b_with_c_result;
 }
