@@ -7,6 +7,7 @@
 #include <stdio.h>
 
 double data_for_test[nTests][nVariables];
+printf("тесты :\n\n");
 
 
 int compare_results(double a, double b, double c,double n_scanf, double x1ref, double x2ref)
@@ -36,6 +37,7 @@ int compare_results(double a, double b, double c,double n_scanf, double x1ref, d
 
 int program_testing()
 {
+    printf("тесты :\n");
 
     int nRow = 0, sum_of_passed_tests = 0;
 
@@ -43,11 +45,15 @@ int program_testing()
     {
 
     test_data_reader();
-            sum_of_passed_tests += compare_results(data_for_test[nRow][0], data_for_test[nRow][1],
+
+    printf("%d-й ",nRow + 1);
+
+    sum_of_passed_tests += compare_results(data_for_test[nRow][0], data_for_test[nRow][1],
                                             data_for_test[nRow][2], data_for_test[nRow][3],
                                             data_for_test[nRow][4], data_for_test[nRow][5]);
     }
-    printf("колличество успешных тестов : %d/%d\n", sum_of_passed_tests, nTests);
+    printf("колличество успешно пройденных тестов : %d/%d\n\n", sum_of_passed_tests, nTests);
+
     return 1;
 }
 
