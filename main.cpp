@@ -5,9 +5,9 @@
 #include <assert.h>
 #include <ctype.h>
 #include <stdlib.h>
-#include "solutions.h"
+#include "equations_solver.h"
 #include "input_output.h"
-#include "massive_test.h"
+#include "test_function.h"
 
 int main()
 {
@@ -16,7 +16,7 @@ int main()
     double a = NAN, b = NAN, c = NAN, x1 = NAN, x2 = NAN;
     int iterationVariable = 0, nRoots = 0, n_scanf = 0;
 
-    kvadratka_test_result();   // TODO conditional compilation #ifdef/#ifndef
+    program_testing();   // TODO conditional compilation #ifdef/#ifndef
 
     for(; iterationVariable < 1; ++iterationVariable)
     {
