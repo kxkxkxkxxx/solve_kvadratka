@@ -3,5 +3,7 @@ int compare_results(double a, double b, double c, double n_scanf,
 
 int program_testing();
 
-const int nTests = 4, nVariables = 6;
+int test_data_reader();
+
+const int nTests = 8, nVariables = 6;
 

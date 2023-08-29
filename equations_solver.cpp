@@ -116,19 +116,26 @@ int square_equation_solution(double a, double b, double c,
     {
      case LESS :
             assert(discriminant_and_zero == LESS);
+
             *n_roots = NO_ROOTS;
             *x_1 = *x_2 = NAN;
             break;
 
      case EQUAL :
             assert(discriminant_and_zero == EQUAL);
+
             *n_roots = ONE_ROOT;
             *x_1 = - b / (2 * a);
+            *x_2 = NAN;
+
+            if(compare_variables(0.0, *x_1) == 1)
+                *x_1 = 0.0;
             break;
 
 
      case GREATER :
             assert(discriminant_and_zero == GREATER);
+
             *n_roots = TWO_ROOTS;
 
             square_root_discriminant = sqrt(discriminant);
