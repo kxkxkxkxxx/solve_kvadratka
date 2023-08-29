@@ -12,5 +12,5 @@ int square_equation_solution(double a, double b, double c,
                              double* x_1, double* x_2, int* n_roots);
 
 int linear_equation_solution(double b, double c,
-                             double* x_1, int* n_roots);
+                             double* x_1,double* x_2, int* n_roots);
 

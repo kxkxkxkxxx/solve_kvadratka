@@ -4,6 +4,7 @@
 #include "solutions.h"
 #include <stdlib.h>
 #include <ctype.h>
+#include "massive_test.h"
 
 int compare_b_with_c(double b, double c, int* compare_b_with_c_result)
 {
@@ -58,10 +59,11 @@ int compare_discriminant_with_zero(double discriminant,
 
         else
         {
-            linear_equation_solution( b, c, &x_1, &n_roots);
+            linear_equation_solution( b, c, &x_1, &x_2, &n_roots);
 
             *nRoots = n_roots;
             *x1 = x_1;
+            *x2 = x_2;
         }
     }
 
@@ -144,7 +146,7 @@ int square_equation_solution(double a, double b, double c,
 
 
 int linear_equation_solution(double b, double c,
-                             double* x_1, int* n_roots)
+                             double* x_1,double* x_2, int* n_roots)
 {
     int compare_b_with_c_result = 0;
 
@@ -154,16 +156,21 @@ int linear_equation_solution(double b, double c,
     {
         case NO_ROOTS :
             (*x_1) = NAN;
+            (*x_2) = NAN;
+
             *n_roots = NO_ROOTS;
             break;
 
         case INFINITY_OF_ROOTS :
-            (*x_1) = 12345.f;
+            (*x_1) = NAN;
+            (*x_2) = NAN;
+
             *n_roots = INFINITY_OF_ROOTS;
             break;
 
         case ONE_ROOT :
             (*x_1) = (- c) / b;
+            (*x_2) = NAN;
 
             if(compare_variables(0.0, *x_1) == 1)
                 *x_1 = 0.0;
