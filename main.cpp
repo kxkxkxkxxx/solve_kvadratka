@@ -8,7 +8,16 @@
 #include "equations_solver.h"
 #include "input_output.h"
 #include "test_function.h"
-
+#include "unittests.h"
+#if 0
+struct DO_SquareSolverTest
+{
+    double a = NAN, b = NAN, c = NAN;
+    int n_scanf = 0;
+    double x1_ref = NAN, x2_ref = NAN;
+    int nRoots_ref;
+};
+#endif
 int main()
 {
     printf("квадратное уравнение в общем виде: a*x^2+b*x+c=0\n");
@@ -16,8 +25,8 @@ int main()
     double a = NAN, b = NAN, c = NAN, x1 = NAN, x2 = NAN;
     int iterationVariable = 0, nRoots = 0, n_scanf = 0;
 
-    program_testing();   // TODO conditional compilation #ifdef/#ifndef
-
+    //program_testing_output();   // TODO conditional compilation #ifdef/#ifndef
+    testAll();
     for(; iterationVariable < 1; ++iterationVariable)
     {
         input(&a, &b, &c, &n_scanf);

@@ -37,7 +37,7 @@ int compare_discriminant_with_zero(double discriminant,
     return *discriminant_and_zero;
  }
 
-
+#if 1
  int solver_equations(double a,  double b, double c,
                         int n_scanf, double* x1, double* x2, int* nRoots)
 {
@@ -71,7 +71,7 @@ int compare_discriminant_with_zero(double discriminant,
 
     return *nRoots;
 }
-
+#endif
 
 int compare_variables(double var_1, double var_2)
 {
